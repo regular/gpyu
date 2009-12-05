@@ -1,0 +1,21 @@
+GPYU
+----
+Command line tool and Python module for GLSL source code generation of fragment shaders that perform color space conversions on the GPU.
+
+GPYU synthesizes a shader program that transforms texture data in a given YUV pixel format to RGB on the fly (while rendering a textured quad). Planar and non-planar YUV formats with various subsampling ratios are supported. Image planes can be sampled from different textures (multitexturing) or from one packed texture that contains all planes.
+
+The input pixel format can be specified in a generic way or as a name string as used in libavcodec/ffmpeg.
+
+import gpyu
+source = gpyu.createShaderSource(gpyu.PixelFormat("yuv420p"), width=1920, height=1080, pitch=1200, packing=BANDS)
+
+Supported packing modes are:
+
+* INTERLEAVED: 1 texture, non-planar, U and V channels are interleaved with the Y channel
+* TEXTURES: 3 separate textures for Y, U and V channels
+* RECTS: 1 texture with Y on top and U and V side-by-side below
+* BANDS: 1 texture with Y on top, then U, then V, texture may have horizontal padding on the right.
+
+The BANDS layout exists, because it may make copying pixel data from a decoding buffer more efficient.
+
+This is work in progress.
